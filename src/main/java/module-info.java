@@ -3,6 +3,7 @@ module com.example.phone_sale {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.sql;
 
     opens com.example.phone_sale to javafx.fxml;
     exports com.example.phone_sale;
