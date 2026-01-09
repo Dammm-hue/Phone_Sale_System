@@ -17,8 +17,8 @@ public class Dynamic_Method {
     public static List<Map<String, Object>> select(
             String table,
             List<String> columns,              // null = *
-            String whereColumn,                // null = no where
-            Object whereValue,
+            String whereClause,                // null = no where
+            List<Object> whereParams,
             String orderBy,                    // null = no order
             Integer limit                      // null = no limit
     ) {
@@ -42,8 +42,8 @@ public class Dynamic_Method {
             StringBuilder sql = new StringBuilder("SELECT " + colPart + " FROM " + table);
 
             // 3) WHERE
-            if (whereColumn != null) {
-                sql.append(" WHERE ").append(whereColumn).append("=?");
+            if (whereClause != null) {
+                sql.append(" WHERE ").append(whereClause);
             }
 
             // 4) ORDER BY
@@ -59,8 +59,11 @@ public class Dynamic_Method {
             ps = con.prepareStatement(sql.toString());
 
             // Set params
-            if (whereColumn != null) {
-                ps.setObject(1, whereValue);
+            int index = 1;
+            if (whereClause != null && whereParams != null) {
+                for (Object paras : whereParams){
+                    ps.setObject(index++,paras);
+                }
             }
 
             rs = ps.executeQuery();
@@ -149,7 +152,7 @@ public class Dynamic_Method {
     // -------------------------
     // 2) UPDATE (Dynamic)
     // -------------------------
-    public static int update(String table, Map<String, Object> data, String whereColumn, Object whereValue) {
+    public static int update(String table, Map<String, Object> data, String whereClause, List<Object> whereParams) {
         Connection con = null;
         PreparedStatement ps = null;
 
@@ -170,8 +173,8 @@ public class Dynamic_Method {
 
             boolean check = false;
 
-            if (whereColumn != null && whereValue != null) {
-                sql.append(" WHERE ").append(whereColumn).append("=?");
+            if (whereClause != null && whereParams != null) {
+                sql.append(" WHERE ").append(whereClause);
                 check = true;
             }
 
@@ -183,7 +186,9 @@ public class Dynamic_Method {
             }
 
             if (check) {
-                ps.setObject(index, whereValue);
+                for (Object paras : whereParams){
+                    ps.setObject(index++,paras);
+                }
             }
 
             return ps.executeUpdate();
@@ -206,7 +211,7 @@ public class Dynamic_Method {
     // -------------------------
     // 3) DELETE (Dynamic)
     // -------------------------
-    public static int delete(String table, String whereColumn, Object whereValue) {
+    public static int delete(String table, String whereClause, List<Object> whereParams) {
         Connection con = null;
         PreparedStatement ps = null;
 
@@ -220,15 +225,18 @@ public class Dynamic_Method {
 
             boolean check = false;
 
-            if (whereColumn != null && whereValue != null) {
-                sql.append(" WHERE ").append(whereColumn).append("=?");
+            if (whereClause != null && whereParams != null) {
+                sql.append(" WHERE ").append(whereClause);
                 check = true;
             }
 
             ps = con.prepareStatement(sql.toString());
 
+            int index = 1;
             if (check) {
-                ps.setObject(1, whereValue);
+                for(Object paras : whereParams){
+                    ps.setObject(index++,paras);
+                }
             }
 
             return ps.executeUpdate();
