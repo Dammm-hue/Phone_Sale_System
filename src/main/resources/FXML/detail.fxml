@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="930.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.detail_controller">
+    <children>
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="930.0" spacing="40.0">
+            <children>
+                <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" spacing="13.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0">
+                            <children>
+                                  <Rectangle fx:id="detailimage" arcHeight="30.0" arcWidth="30.0" fill="#e8e9eb" height="160.0" stroke="BLACK" strokeType="INSIDE" width="250.0" HBox.hgrow="ALWAYS" />
+                                <VBox alignment="CENTER_LEFT" maxHeight="90.0" minHeight="90.0" spacing="20.0">
+                           <children>
+                              <Label fx:id="lblname" text="Name">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font></Label>
+                              <Label fx:id="lblroleid" layoutX="10.0" layoutY="10.0" text="staff">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font></Label>
+                              <Button fx:id="btnstatus" mnemonicParsing="false" onAction="#clickstatus" style="-fx-background-color: #7cfc00;" text="Active" />
+                           </children>
+                                </VBox>
+                            </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
+                        </HBox>
+                        <Separator prefWidth="200.0" />
+                        <VBox>
+                            <children>
+                                <HBox spacing="25.0">
+                                    <children>
+                                        <Button fx:id="btnsid" mnemonicParsing="false">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Label text="Staff ID:">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                                        </Label>
+                              <Label fx:id="lblsid" text="Staff_ID" />
+                                    </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                                </HBox>
+                                <HBox layoutX="10.0" layoutY="61.0" spacing="32.0">
+                                    <children>
+                                        <Button fx:id="btnemail" mnemonicParsing="false">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Label text="Email:">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold Italic" size="17.0" />
+                                 </font>
+                                        </Label>
+                              <Label fx:id="lblemail" text="Email" />
+                                    </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                                </HBox>
+                                <HBox layoutX="10.0" layoutY="10.0" spacing="30.0">
+                                    <children>
+                                        <Button fx:id="btnphone" mnemonicParsing="false">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Label text="Phone:">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold Italic" size="17.0" />
+                                 </font>
+                                        </Label>
+                              <Label fx:id="lblphone" text="Phone" />
+                                    </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                                </HBox>
+                        <HBox layoutX="10.0" layoutY="163.0" spacing="25.0">
+                           <children>
+                              <Button fx:id="btnaddress1" mnemonicParsing="false">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Button>
+                              <Label text="Address:">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbladdress" text="Address" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                                <HBox layoutX="10.0" layoutY="112.0" spacing="35.0">
+                                    <children>
+                                        <Button fx:id="btndate" mnemonicParsing="false">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Label text="Date:">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                                        </Label>
+                              <Label fx:id="lbldate" text="Created" />
+                                    </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                                </HBox>
+                                <Separator />
+                                <Label text="Performance">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" left="10.0" top="5.0" />
+                                    </VBox.margin>
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                                <Separator />
+                                <HBox alignment="CENTER" spacing="50.0">
+                                    <children>
+                                        <VBox alignment="TOP_CENTER" spacing="20.0">
+                                            <children>
+                                                <Label text="Total Sales:">
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </Label>
+                                    <Label fx:id="lbltotalsales" text="Value" />
+                                            </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                                        </VBox>
+                                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" spacing="20.0">
+                                            <children>
+                                                <Label text="Deal Closed:">
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </Label>
+                                    <Label fx:id="lbldealclosed" text="Value" />
+                                            </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                                        </VBox>
+                                        <VBox alignment="TOP_CENTER" layoutX="169.0" layoutY="10.0" spacing="20.0">
+                                            <children>
+                                                <Label text="Target %">
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </Label>
+                                    <Label fx:id="lbltarget" text="Value" />
+                                            </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                                        </VBox>
+                                    </children>
+                           <padding>
+                              <Insets bottom="10.0" top="10.0" />
+                           </padding>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+                <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="465.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Button fx:id="btnexit" mnemonicParsing="false" onAction="#clickexit" />
+                     </children>
+                  </HBox>
+                  <Label text="Sales Performance">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Separator prefHeight="0.0" prefWidth="441.0" />
+                  <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="326.0" minWidth="441.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="100.0" spacing="3.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label text="Sales Report">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <ComboBox fx:id="combochart" onAction="#clickcombo" prefWidth="150.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="266.0" minWidth="441.0">
+                                 <children>
+                                    <BarChart fx:id="monthlychart">
+                                      <xAxis>
+                                        <CategoryAxis label="Months" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis fx:id="yaxismonth" side="LEFT" upperBound="0.0" />
+                                      </yAxis>
+                                    </BarChart>
+                                    <BarChart fx:id="dailychart">
+                                      <xAxis>
+                                        <CategoryAxis label="Days" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis fx:id="yaxisday" side="LEFT" upperBound="0.0" />
+                                      </yAxis>
+                                    </BarChart>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+                  <Separator prefWidth="200.0" />
+                  <HBox alignment="CENTER" prefHeight="79.0" prefWidth="500.0" spacing="20.0">
+                     <children>
+                        <VBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Label text="This Month:" />
+                              <Label fx:id="lblthismonth" text="Value" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0">
+                           <children>
+                              <Label text="Last Month:" />
+                              <Label fx:id="lbllastmonth" text="Value" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="150.0" layoutY="10.0" spacing="10.0">
+                           <children>
+                              <HBox spacing="3.0">
+                                 <children>
+                                    <Label text="Monthly Growth:" />
+                                    <Button fx:id="btnup" mnemonicParsing="false" style="-fx-background-color: #7cfc00;" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="lblgrowth" text="Value" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="296.0" layoutY="20.0" spacing="10.0">
+                           <children>
+                              <HBox spacing="3.0">
+                                 <children>
+                                    <Label text="Monthly Growth:" />
+                                    <Button fx:id="btndown" mnemonicParsing="false" style="-fx-background-color: red;" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="lblgrowth1" text="Value" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+            </children>
+        </HBox>
+    </children>
+</StackPane>
