@@ -41,6 +41,10 @@ public class Acessories_form_controller {
     public Rectangle product_image;
     @FXML
     public TextArea detail_text_area;
+
+    private int currentBrandId = 0;
+
+
     @FXML
     private Label lbl_details_info, lbl_all, lbl_airpod, lbl_headphone, lbl_powerbank, lbl_charger;
     public int productId;
@@ -109,7 +113,7 @@ public class Acessories_form_controller {
         });
 
         name_field.textProperty().addListener((obs, oldVal, newVal) -> {
-           type_combo.setValue (determineType(newVal));
+            type_combo.setValue (determineType(newVal));
             if (isExistingModel()) {
                 toggleDetailsView(false);
             }
@@ -195,16 +199,12 @@ public class Acessories_form_controller {
 
         try {
             int sharedDetailId;
-
-
             String checkQuery = "SELECT product_accessory_fact FROM products WHERE product_model = '" + modelName.replace("'", "''") + "' LIMIT 1";
             List<Map<String, Object>> existingModel = Dynamic_Method.select(checkQuery);
 
             if (existingModel != null && !existingModel.isEmpty()) {
-
                 sharedDetailId = Integer.parseInt(existingModel.get(0).get("product_accessory_fact").toString());
             } else {
-
                 Map<String, Object> detailData = new HashMap<>();
                 detailData.put("accessories_text", detail_text_area.getText().isEmpty() ? "No description" : detail_text_area.getText());
                 Dynamic_Method.insert("accessories_detail", detailData);
@@ -214,20 +214,21 @@ public class Acessories_form_controller {
             }
 
             for (Model.colorandimage v : tempVariantList) {
-
                 Map<String, Object> p = new HashMap<>();
                 p.put("product_model", modelName);
-                p.put("product_category", type_combo.getValue());
+
+                // FIXED: Changed 'product_category' to 'product_brand_id'
+                p.put("product_brand_id", getBrandId(type_combo.getValue()));
+
                 p.put("product_sale_price", Double.parseDouble(price_field.getText()));
                 p.put("product_color", v.getColor());
                 p.put("product_image", v.getImagePath());
                 p.put("product_accessory_fact", sharedDetailId);
-                p.put("product_type_id", 2);
-                p.put("product_brand_id", 1);
+                p.put("product_type_id", 2); // Accessory type
 
                 Dynamic_Method.insert("products", p);
 
-
+                // Re-fetch the ID to create stock entry
                 List<Map<String, Object>> productRes = Dynamic_Method.select("SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1");
                 int newProductId = Integer.parseInt(productRes.get(0).get("product_id").toString());
 
@@ -238,25 +239,27 @@ public class Acessories_form_controller {
                 Dynamic_Method.insert("product_stock", s);
             }
 
-            Notifunction.success("Success", "Variants for " + modelName + " added and connected to details!");
+            Notifunction.success("Success", "Variants for " + modelName + " added!");
             tempVariantList.clear();
             finalizeAction();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Notifunction.error("Database Error", "Failed to connect variants to details.");
+            Notifunction.error("Database Error", "Failed to add products. Check column names.");
         }
     }
 
     @FXML
     void edit_clcik(ActionEvent event) {
-
         if (!validateInputs()) return;
 
         try {
             Map<String, Object> pMap = new HashMap<>();
             pMap.put("product_model", name_field.getText().trim());
-            pMap.put("product_category", type_combo.getValue());
+
+            // ပြင်ဆင်ရန်- product_category အစား product_brand_id ကို သုံးပါ
+            pMap.put("product_brand_id", getBrandId(type_combo.getValue()));
+
             pMap.put("product_sale_price", Double.parseDouble(price_field.getText()));
             pMap.put("product_color", color_field.getText().trim());
             pMap.put("product_image", selectedImagePath);
@@ -272,39 +275,40 @@ public class Acessories_form_controller {
             }
 
             if (rowsAffected > 0) {
-                currentCategory = "";
+                currentBrandId = 0; // currentCategory အစား currentBrandId သုံးပါ
                 loadacc();
                 main_cancle_click(null);
-                Notifunction.success("Success", "updated for this specific item!");
+                Notifunction.success("Success", "Updated successfully!");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    private int getBrandId(String brandName) {
+        if (brandName == null) return 1;
+        return switch (brandName) {
+            case "Airpod" -> 4;
+            case "Charger" -> 5;
+            case "Powerbank" -> 6;
+            case "Headphone" -> 7;
+            default -> 1;
+        };
+    }
 
     public void loadacc() {
         flowpane.getChildren().clear();
         String searchText = txt_search.getText().trim().toLowerCase();
 
-
         StringBuilder queryBuilder = new StringBuilder("SELECT product_model FROM products WHERE product_type_id = 2");
 
-
-        if (currentCategory != null && !currentCategory.isEmpty()) {
-            queryBuilder.append(" AND product_category = '").append(currentCategory).append("'");
+        // Filtering by brand_id instead of category
+        if (currentBrandId != 0) {
+            queryBuilder.append(" AND product_brand_id = ").append(currentBrandId);
         }
 
-
         if (!searchText.isEmpty()) {
-            try {
-                double price = Double.parseDouble(searchText);
-                queryBuilder.append(" AND product_sale_price <= ").append(price);
-            } catch (NumberFormatException e) {
-                queryBuilder.append(" AND LOWER(product_model) LIKE '%")
-                        .append(searchText.replace("'", "''"))
-                        .append("%'");
-            }
+            queryBuilder.append(" AND (LOWER(product_model) LIKE '%").append(searchText.replace("'", "''")).append("%')");
         }
 
         queryBuilder.append(" GROUP BY product_model");
@@ -312,11 +316,16 @@ public class Acessories_form_controller {
         List<Map<String, Object>> models = Dynamic_Method.select(queryBuilder.toString());
 
         if (models != null) {
-            for (Map<String, Object> model : models) {
-                String modelName = model.get("product_model").toString();
+            for (Map<String, Object> modelMap : models) {
+                // FIX: Null check for model name
+                Object modelObj = modelMap.get("product_model");
+                if (modelObj == null) continue;
+
+                String modelName = modelObj.toString();
                 String variantQuery = "SELECT * FROM products WHERE product_model = '" + modelName.replace("'", "''") + "'";
                 List<Map<String, Object>> variants = Dynamic_Method.select(variantQuery);
 
+                // loadacc() ထဲက loop ပတ်တဲ့နေရာမှာ အခုလိုစစ်ပါ
                 if (variants != null && !variants.isEmpty()) {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Accessory_general_card.fxml"));
@@ -324,13 +333,14 @@ public class Acessories_form_controller {
                         Accessory_general_controller controller = loader.getController();
 
                         Map<String, Object> first = variants.get(0);
+
                         controller.setData(
-                                Integer.parseInt(first.get("product_id").toString()),
-                                first.get("product_model").toString(),
-                                first.get("product_category").toString(),
-                                first.get("product_color").toString(),
-                                Double.parseDouble(first.get("product_sale_price").toString()),
-                                first.get("product_image").toString()
+                                Integer.parseInt(first.getOrDefault("product_id", 0).toString()),
+                                first.getOrDefault("product_model", "Unknown").toString(),
+                                first.getOrDefault("product_brand_id", "1").toString(), // ဒီနေရာမှာ brand_id ကို ပို့ရပါမယ်
+                                first.getOrDefault("product_color", "N/A").toString(),
+                                Double.parseDouble(first.getOrDefault("product_sale_price", 0.0).toString()),
+                                first.getOrDefault("product_image", "/image/photo.jpg").toString()
                         );
 
                         controller.setVariantsData(variants);
@@ -345,36 +355,34 @@ public class Acessories_form_controller {
     }
 
     @FXML
-    void click_on_lbl_all(MouseEvent event) {
-        txt_search.clear();
-        currentCategory = "";
-        loadacc();
-
-
-    }
-
-    @FXML
-    void click_on_lbl_charger(MouseEvent e) {
-        currentCategory = "charger";
+    void click_on_lbl_all(MouseEvent e) {
+        currentBrandId = 0;
         loadacc();
     }
 
     @FXML
     void click_on_lbl_airpod(MouseEvent e) {
-        currentCategory = "Airpod";
+        currentBrandId = 4;
         loadacc();
     }
 
     @FXML
     void click_on_lbl_headphone(MouseEvent e) {
-        currentCategory = "headphone";
+        currentBrandId = 7;
+        loadacc();
+    }
+
+    @FXML
+    void click_on_lbl_charger(MouseEvent e) {
+        currentBrandId = 5;
         loadacc();
     }
 
     @FXML
     void click_on_lbl_powerbank(MouseEvent e) {
-        currentCategory = "powerbank";
+        currentBrandId = 6;
         loadacc();
+
     }
 
     @FXML
@@ -437,18 +445,15 @@ public class Acessories_form_controller {
             return;
         }
 
-        // Check if we are currently EDITING (Update buttons are visible)
+
         boolean isEditMode = update_btns.isVisible();
 
-        // If it's a NEW product and model exists, block it.
-        // If it's an EDIT, allow it to open.
         if (isExistingModel() && !isEditMode) {
             Notifunction.error("Duplicate Model", "Details for '" + modelName + "' already exist.");
             toggleDetailsView(false);
             return;
         }
 
-        // Toggle visibility
         boolean isCurrentlyVisible = text_area_pane.isVisible();
         toggleDetailsView(!isCurrentlyVisible);
 
